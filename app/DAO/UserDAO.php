@@ -12,11 +12,13 @@ class UserDAO
 {
     public function createUser(UserDTO $dto): array
     {
+        $isFirst = User::count() === 0;
+
         $user=User::create([
             'name'     => $dto->name,
             'email'    => $dto->email,
             'password' => Hash::make($dto->password),
-            'role'     => $dto->role,
+            'role'     => $isFirst ? 'admin' : $dto->role,
         ]);
 
         $token = auth('api')->login($user);
